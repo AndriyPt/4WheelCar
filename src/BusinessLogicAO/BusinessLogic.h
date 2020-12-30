@@ -2,6 +2,7 @@
 #define BUSINESS_LOGIC_H_
 
 #include "BusinessLogicBase.h"
+#include "IMUInterface.h"
 #include "orion_protocol/orion_minor.h"
 #include <stdint.h>
 #include <stdbool.h>
@@ -10,7 +11,10 @@
 
 #define COMMAND_BUFFER_SIZE (1024)
 
-class BusinessLogic : public BusinessLogicBase 
+namespace business_logic
+{
+
+class BusinessLogic : public BusinessLogicBase, public IMUInterface
 {
 public:
     BusinessLogic(orion::Minor *minor);
@@ -18,7 +22,8 @@ public:
     BusinessLogic& operator=(const BusinessLogic& object) = delete;
     BusinessLogic(const BusinessLogic& object) = delete;
 
-    bool setImu(int32_t alpha, int32_t beta, int32_t gamma_);
+    virtual void update_data(float alpha, float beta, float gamma);
+
     bool setEncoders(int32_t left, int32_t right);
 
     void sendNewCommandEvent();
@@ -46,5 +51,6 @@ private:
     std::size_t command_size_ = 0;
 };
 
+}
 
 #endif /* BUSINESS_LOGIC_H_ */
