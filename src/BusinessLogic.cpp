@@ -8,10 +8,19 @@ BusinessLogic::BusinessLogic(orion::Minor *minor): BusinessLogicBase(), minor_(m
 {
 }
 
+bool BusinessLogic::setImu(int32_t alpha, int32_t beta, int32_t gamma_)
+{
+
+}
+
+bool setEncoders(int32_t left, int32_t right)
+{
+
+}
+
 void BusinessLogic::sendNewCommandEvent()
 {
     return Q_NEW(SetImuEvt, signal);    
-
 }
 
 void BusinessLogic::process_handshake_receive(void)

@@ -4,6 +4,7 @@
 #include "BusinessLogicBase.h"
 #include "orion_protocol/orion_minor.h"
 #include <stdint.h>
+#include <stdbool.h>
 #include <cstddef>
 #include "qpcpp.h"
 
@@ -17,7 +18,9 @@ public:
     BusinessLogic& operator=(const BusinessLogic& object) = delete;
     BusinessLogic(const BusinessLogic& object) = delete;
 
-    bool setImu(ImuData* data);
+    bool setImu(int32_t alpha, int32_t beta, int32_t gamma_);
+    bool setEncoders(int32_t left, int32_t right);
+
     void sendNewCommandEvent();
 
 protected:
