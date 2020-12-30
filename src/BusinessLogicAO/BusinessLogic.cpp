@@ -4,6 +4,8 @@
 #include "protocol.h"
 #include "qpcpp.h"
 
+namespace business_logic {
+
 BusinessLogic::BusinessLogic(orion::Minor *minor): BusinessLogicBase(), minor_(minor)
 {
 }
@@ -36,14 +38,14 @@ void BusinessLogic::process_handshake_receive(void)
     this->minor_->sendResult((uint8_t*)&handshake_result, sizeof(handshake_result));
 }
 
-void BusinessLogic::setImuHandler(SetImuEvt const* event)
+void BusinessLogic::setImuHandler(Event const* event)
 {
     assert(NULL != event);
     this->imu_.velocity_x = event->data.velocity_x; 
     this->imu_.acceleration_y = event->data.acceleration_y; 
 }
 
-void BusinessLogic::setEncodersHandler()
+void BusinessLogic::setEncodersHandler(Event const* event)
 {
 
 }
@@ -114,4 +116,4 @@ void BusinessLogic::commandHandler()
     }
 }
 
-}
+} // namespace business_logic

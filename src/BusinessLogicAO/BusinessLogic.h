@@ -29,8 +29,8 @@ public:
     void sendNewCommandEvent();
 
 protected:
-    virtual void setImuHandler(SetImuEvt const* event);
-    virtual void setEncodersHandler();
+    virtual void setImuHandler(Event const* event);
+    virtual void setEncodersHandler(Event const* event);
     virtual void commandHandler();
 
     void process_handshake_receive(void);
@@ -51,6 +51,6 @@ private:
     std::size_t command_size_ = 0;
 };
 
-}
+} // namespace business_logic
 
 #endif /* BUSINESS_LOGIC_H_ */
