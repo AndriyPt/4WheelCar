@@ -34,9 +34,8 @@ typedef struct
 
 typedef struct
 {
-    int32_t alpha;
-    int32_t beta;
-    int32_t gamma;
+    int32_t left;
+    int32_t right;
 } EncodersData;
 
 enum Signal

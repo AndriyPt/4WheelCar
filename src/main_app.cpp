@@ -5,6 +5,13 @@
  *      Author: Bogdan
  */
 #include <Motor.h>
+#include "BusinessLogicAO/BusinessLogic.h"
+#include "BusinessLogicAO/VirtualComPort.h"
+#include "orion_protocol/orion_frame_transport.h"
+#include "orion_protocol/orion_cobs_framer.h"
+#include "orion_protocol/orion_header.h"
+#include "orion_protocol/orion_minor.h"
+
 #include "qpcpp.hpp"
 #include <new>
 
@@ -17,6 +24,7 @@
 #include "MPU9250HALSTM32HALI2C.h"
 #include "IMU.h"
 #include "Communication.h"
+#include "orion_protocol/orion_minor.h"
 
 using namespace std;
 using namespace QP;
@@ -26,9 +34,16 @@ RPMEncoderOptical *enc1;
 RPMEncoderOptical *enc2;
 MPU9250FIFO *mpu;
 MPU9250HALSTM32HALI2C *mpuHal;
+
+carmen_hardware::VirtualComPort *p_com_port;
+orion::COBSFramer *p_cobs_framer;
+orion::FrameTransport *p_frame_transport;
+orion::Minor *p_minor;
+
 IMU *imu;
 motor::Motor *motorp;
 Communication *communication;
+business_logic::BusinessLogic *p_business_logic;
 
 volatile static float time = 0;
 
@@ -90,13 +105,21 @@ void main_cpp(void) {
 		  &htim3, TIM_CHANNEL_2,
 		  &htim3, TIM_CHANNEL_1);
 
-	motorp = new motor::Motor(driver, enc1, nullptr);
+	p_com_port = new carmen_hardware::VirtualComPort();
+	p_cobs_framer = new orion::COBSFramer();
+	p_frame_transport = new orion::FrameTransport *p_frame_transport(p_com_port, p_cobs_framer);
+	p_minor = new orion::Minor(p_frame_transport);
 
-    communication = new Communication(&huart6, motorp);
+	p_business_logic = new business_logic::BusinessLogic(p_minor);		  
+
+	motorp = new motor::Motor(driver, enc1, nullptr);
+	p_business_logic->setMotor(motorp);
+
+    // communication = new Communication(&huart6, motorp);
 
 	mpuHal = new MPU9250HALSTM32HALI2C(&hi2c1, 0x68);
 	mpu = new (mmm) MPU9250FIFO(mpuHal);
-	imu = new IMU(mpu, communication);
+	imu = new IMU(mpu, p_business_logic);
 
 
 	/// Start QP

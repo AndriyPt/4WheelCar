@@ -22,7 +22,7 @@ bool setEncoders(int32_t left, int32_t right)
 
 void BusinessLogic::sendNewCommandEvent()
 {
-    return Q_NEW(SetImuEvt, signal);    
+    return QP::Q_NEW(Event, BL_COMMAND_SIG);    
 }
 
 void BusinessLogic::process_handshake_receive(void)
@@ -41,13 +41,16 @@ void BusinessLogic::process_handshake_receive(void)
 void BusinessLogic::setImuHandler(Event const* event)
 {
     assert(NULL != event);
-    this->imu_.velocity_x = event->data.velocity_x; 
-    this->imu_.acceleration_y = event->data.acceleration_y; 
+    this->imu_angle_alpha_ = event->data.imu.alpha; 
+    this->imu_angle_beta_ = event->data.imu.beta; 
+    this->imu_angle_gamma_ = event->data.imu.gamma; 
 }
 
 void BusinessLogic::setEncodersHandler(Event const* event)
 {
-
+    assert(NULL != event);
+    this->encoder_left_ = event->data.encoders.left; 
+    this->encoder_right_ = event->data.encoders.right; 
 }
 
 void BusinessLogic::process_set_commands_receive(void)
