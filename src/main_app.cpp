@@ -4,6 +4,7 @@
  *  Created on: Oct 11, 2020
  *      Author: Bogdan
  */
+#include "main_app.h"
 #include <Motor.h>
 #include "BusinessLogicAO/BusinessLogic.h"
 #include "BusinessLogicAO/VirtualComPort.h"
@@ -47,6 +48,14 @@ business_logic::BusinessLogic *p_business_logic;
 
 volatile static float time = 0;
 
+void send_new_command_event(void)
+{
+  if (NULL != p_business_logic)
+  {
+    p_business_logic->sendNewCommandEvent();
+  }
+}
+
 extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	switch(GPIO_Pin) {
@@ -57,7 +66,6 @@ extern "C" void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	}
 	}
 }
-
 
 extern "C" int __io_putchar(int ch) {
 	uint8_t c = (char)ch;

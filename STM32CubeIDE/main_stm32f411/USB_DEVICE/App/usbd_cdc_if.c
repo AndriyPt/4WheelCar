@@ -23,7 +23,8 @@
 #include "usbd_cdc_if.h"
 
 /* USER CODE BEGIN INCLUDE */
-
+#include "orion_protocol/orion_circular_buffer.h"
+#include "main_app.h"
 /* USER CODE END INCLUDE */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -63,6 +64,10 @@
   */
 
 /* USER CODE BEGIN PRIVATE_DEFINES */
+/* Define size for the receive and transmit buffer over CDC */
+/* It's up to user to redefine and/or remove those define */
+#define APP_RX_DATA_SIZE  2048
+#define APP_TX_DATA_SIZE  2048
 /* USER CODE END PRIVATE_DEFINES */
 
 /**
@@ -75,6 +80,8 @@
   */
 
 /* USER CODE BEGIN PRIVATE_MACRO */
+
+#define INPUT_BUFFER_SIZE (1024)
 
 /* USER CODE END PRIVATE_MACRO */
 
@@ -96,6 +103,8 @@ uint8_t UserTxBufferFS[APP_TX_DATA_SIZE];
 
 /* USER CODE BEGIN PRIVATE_VARIABLES */
 
+static uint8_t input_buffer[INPUT_BUFFER_SIZE] = { 0 };
+static orion_circular_buffer_t circular_buffer;
 /* USER CODE END PRIVATE_VARIABLES */
 
 /**
@@ -156,6 +165,7 @@ static int8_t CDC_Init_FS(void)
   /* Set Application Buffers */
   USBD_CDC_SetTxBuffer(&hUsbDeviceFS, UserTxBufferFS, 0);
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, UserRxBufferFS);
+  orion_circular_buffer_init(&circular_buffer, input_buffer, INPUT_BUFFER_SIZE);
   return (USBD_OK);
   /* USER CODE END 3 */
 }
@@ -264,6 +274,10 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   /* USER CODE BEGIN 6 */
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
+
+  orion_circular_buffer_add(&circular_buffer, Buf, *Len);
+  send_new_command_event();
+
   return (USBD_OK);
   /* USER CODE END 6 */
 }
@@ -317,6 +331,18 @@ static int8_t CDC_TransmitCplt_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum)
 }
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_IMPLEMENTATION */
+
+uint32_t dequeue_input_buffer(uint8_t * p_buffer, uint32_t size)
+{
+    uint32_t result = orion_circular_buffer_dequeue(&circular_buffer, p_buffer, size);
+    return result;
+}
+
+bool has_items_input_buffer()
+{
+    bool result = orion_circular_buffer_is_empty(&circular_buffer);
+    return (!result);
+}
 
 /* USER CODE END PRIVATE_FUNCTIONS_IMPLEMENTATION */
 
