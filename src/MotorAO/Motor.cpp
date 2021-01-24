@@ -5,7 +5,7 @@
  *      Author: Bogdan
  */
 #include <math.h>
-#include <Motor.h>
+#include "Motor.h"
 
 namespace motor {
 

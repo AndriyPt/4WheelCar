@@ -7,7 +7,7 @@
 
 #include <stdio.h>
 
-#include "IMU.h"
+#include "imu.h"
 #include "mpu9250.h"
 
 /// 10ms tick

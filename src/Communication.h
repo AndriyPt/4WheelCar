@@ -8,7 +8,7 @@
 #ifndef COMMUNICATION_H_
 #define COMMUNICATION_H_
 
-#include <Motor.h>
+#include "Motor.h"
 #include <functional>
 #include "qpcpp.hpp"
 #include "usart.h"
