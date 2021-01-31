@@ -5,7 +5,7 @@
  *      Author: Bogdan
  */
 #include "main_app.h"
-#include <Motor.h>
+#include "Motor.h"
 #include "BusinessLogicAO/BusinessLogic.h"
 #include "BusinessLogicAO/VirtualComPort.h"
 #include "orion_protocol/orion_frame_transport.h"
@@ -23,7 +23,7 @@
 #include "cmsis_os.h"
 #include "MPU9250.h"
 #include "MPU9250HALSTM32HALI2C.h"
-#include "IMU.h"
+#include "imu.h"
 #include "Communication.h"
 #include "orion_protocol/orion_minor.h"
 
@@ -48,7 +48,7 @@ business_logic::BusinessLogic *p_business_logic;
 
 volatile static float time = 0;
 
-void send_new_command_event(void)
+extern "C" void send_new_command_event(void)
 {
   if (NULL != p_business_logic)
   {
@@ -115,7 +115,7 @@ void main_cpp(void) {
 
 	p_com_port = new carmen_hardware::VirtualComPort();
 	p_cobs_framer = new orion::COBSFramer();
-	p_frame_transport = new orion::FrameTransport *p_frame_transport(p_com_port, p_cobs_framer);
+	p_frame_transport = new orion::FrameTransport(p_com_port, p_cobs_framer);
 	p_minor = new orion::Minor(p_frame_transport);
 
 	p_business_logic = new business_logic::BusinessLogic(p_minor);		  

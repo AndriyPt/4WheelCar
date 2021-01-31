@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include "orion_protocol/orion_communication.h"
 
-namespace orion
+namespace carmen_hardware
 {
 
 class VirtualComPort: public orion::Communication
@@ -19,6 +19,6 @@ public:
   virtual ~VirtualComPort() = default;
 };
 
-}  // namespace orion
+}  // namespace carmen_hardware
 
 #endif  // VIRTUAL_COM_PORT_H

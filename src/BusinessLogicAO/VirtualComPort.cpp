@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-namespace orion
+namespace carmen_hardware
 {
 
 VirtualComPort::VirtualComPort()
