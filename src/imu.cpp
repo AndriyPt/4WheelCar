@@ -8,7 +8,7 @@
 #include <stdio.h>
 
 #include "imu.h"
-#include "mpu9250.h"
+#include "MPU9250.h"
 
 /// 10ms tick
 #define TICKS_TIMEOUT_S 100

@@ -29,11 +29,11 @@ Communication::Communication(UART_HandleTypeDef *huart, motor::Motor *motor) :
 		exit(0);
 	};
 
-	if (HAL_OK != HAL_UART_RegisterCallback(huart, HAL_UART_RX_COMPLETE_CB_ID, [](UART_HandleTypeDef *huart){
-		this_local->HAL_UART_RxCpltCallback(huart);
-	})) {
-		exit(0);
-	};
+//	if (HAL_OK != HAL_UART_RegisterCallback(huart, HAL_UART_RX_COMPLETE_CB_ID, [](UART_HandleTypeDef *huart){
+//		this_local->HAL_UART_RxCpltCallback(huart);
+//	})) {
+//		exit(0);
+//	};
 
 	if (HAL_OK != HAL_UART_Receive_IT(huart, &recv_byte, sizeof(recv_byte))) {
 		exit(0);

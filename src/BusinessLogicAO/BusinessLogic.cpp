@@ -1,16 +1,15 @@
 #include "BusinessLogic.h"
-#include "qpcpp.h"
 #include <assert.h>
 #include "protocol.h"
 #include "qpcpp.h"
 
 namespace business_logic {
 
-BusinessLogic::BusinessLogic(orion::Minor *minor): BusinessLogicBase(), minor_(minor)
-{
-}
+//BusinessLogic::BusinessLogic(orion::Minor *minor): BusinessLogicBase(), minor_(minor)
+//{
+//}
 
-bool BusinessLogic::setImu(int32_t alpha, int32_t beta, int32_t gamma_)
+bool BusinessLogic::setImu(int32_t alpha, int32_t beta, int32_t gamma)
 {
 
 }

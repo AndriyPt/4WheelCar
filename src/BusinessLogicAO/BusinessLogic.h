@@ -25,6 +25,7 @@ public:
     virtual void update_data(float alpha, float beta, float gamma);
 
     bool setEncoders(int32_t left, int32_t right);
+    bool setImu(int32_t alpha, int32_t beta, int32_t gamma);
 
     void sendNewCommandEvent();
 

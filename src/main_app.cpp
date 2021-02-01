@@ -25,7 +25,7 @@
 #include "MPU9250HALSTM32HALI2C.h"
 #include "imu.h"
 #include "Communication.h"
-#include <ros.h>
+//#include <ros.h>
 
 #include "orion_protocol/orion_minor.h"
 
@@ -92,13 +92,13 @@ uint8_t poolStor3[1024];
 
 uint8_t mmm[sizeof(MPU9250FIFO)] = {0};
 
-class NewHardware : public ArduinoHardware
-{
-  public:
-  NewHardware():ArduinoHardware(&huart6){};
-};
-
-ros::NodeHandle_<NewHardware>  nh;
+//class NewHardware : public ArduinoHardware
+//{
+//  public:
+//  NewHardware():ArduinoHardware(&huart6){};
+//};
+//
+//ros::NodeHandle_<NewHardware>  nh;
 
 void main_cpp(void) {
     QF::init(); // initialize the framework
@@ -131,7 +131,7 @@ void main_cpp(void) {
 	p_business_logic = new business_logic::BusinessLogic(p_minor);
 
 	motorp = new motor::Motor(driver, enc1, nullptr);
-	p_business_logic->setMotor(motorp);
+//	p_business_logic->setMotor(motorp);
 
     // communication = new Communication(&huart6, motorp);
 
