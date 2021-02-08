@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include <cstddef>
 #include "qpcpp.h"
+#include "Motor.h"
 
 #define COMMAND_BUFFER_SIZE (1024)
 
@@ -24,10 +25,11 @@ public:
 
     virtual void update_data(float alpha, float beta, float gamma);
 
-    bool setEncoders(int32_t left, int32_t right);
-    bool setImu(int32_t alpha, int32_t beta, int32_t gamma);
+    void setEncoders(int32_t left, int32_t right);
 
     void sendNewCommandEvent();
+
+    void setMotor(motor::Motor *motor);
 
 protected:
     virtual void setImuHandler(Event const* event);
@@ -40,6 +42,7 @@ protected:
 
 private:
     orion::Minor *minor_ = NULL;
+    motor::Motor *motor_ = NULL;
 
     int32_t encoder_left_ = 0;
     int32_t encoder_right_ = 0;

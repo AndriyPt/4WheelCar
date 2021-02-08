@@ -5,23 +5,37 @@
 
 namespace business_logic {
 
-//BusinessLogic::BusinessLogic(orion::Minor *minor): BusinessLogicBase(), minor_(minor)
-//{
-//}
-
-bool BusinessLogic::setImu(int32_t alpha, int32_t beta, int32_t gamma)
+BusinessLogic::BusinessLogic(orion::Minor *minor): BusinessLogicBase(), minor_(minor)
 {
-
 }
 
-bool setEncoders(int32_t left, int32_t right)
+void BusinessLogic::update_data(float alpha, float beta, float gamma)
 {
+	auto event = Q_NEW(Event, BL_SET_IMU_SIG);
+	event->data.imu.alpha = (int32_t)(alpha * 1000);
+	event->data.imu.beta = (int32_t)(beta * 1000);
+	event->data.imu.gamma = (int32_t)(gamma * 1000);
+	POST(event, this);
+}
 
+void BusinessLogic::setEncoders(int32_t left, int32_t right)
+{
+	auto event = Q_NEW(Event, BL_SET_ENCODERS_SIG);
+	event->data.encoders.left = left;
+	event->data.encoders.right = right;
+	POST(event, this);
 }
 
 void BusinessLogic::sendNewCommandEvent()
 {
-    return QP::Q_NEW(Event, BL_COMMAND_SIG);    
+	auto event = Q_NEW(Event, BL_COMMAND_SIG);
+	POST(event, this);
+}
+
+void BusinessLogic::setMotor(motor::Motor *motor)
+{
+	assert(NULL != motor);
+	this->motor_ = motor;
 }
 
 void BusinessLogic::process_handshake_receive(void)
@@ -61,8 +75,8 @@ void BusinessLogic::process_set_commands_receive(void)
     assert(carmen_hardware::MessageType::SetCommands ==
             (carmen_hardware::MessageType)command->header.common.message_id);
 
-    // TODO: Implement
-    // this->motor_->setCommand(command->left_cmd, command->right_cmd);
+    this->motor_->SetSpeedL(command->left_cmd / 1000.0);
+    this->motor_->SetSpeedR(command->right_cmd / 1000.0);
 
     carmen_hardware::SetCommandsResult reply;
     reply.header.common.sequence_id = command->header.common.sequence_id;

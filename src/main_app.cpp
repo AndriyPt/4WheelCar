@@ -131,7 +131,7 @@ void main_cpp(void) {
 	p_business_logic = new business_logic::BusinessLogic(p_minor);
 
 	motorp = new motor::Motor(driver, enc1, nullptr);
-//	p_business_logic->setMotor(motorp);
+	p_business_logic->setMotor(motorp);
 
     // communication = new Communication(&huart6, motorp);
 

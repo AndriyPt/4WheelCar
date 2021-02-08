@@ -67,6 +67,9 @@ protected:
     virtual void setEncodersHandler(Event const* event) = 0;
     virtual void commandHandler() = 0;
 
+public:
+    BusinessLogicBase();
+
 protected:
     Q_STATE_DECL(initial);
     Q_STATE_DECL(idle);

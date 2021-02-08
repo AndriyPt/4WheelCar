@@ -30,6 +30,11 @@
 namespace business_logic {
 
 //.${application::BusinessLogicBase} .........................................
+//.${application::BusinessLogicBas~::BusinessLogicBase} ......................
+BusinessLogicBase::BusinessLogicBase()
+  : QActive(Q_STATE_CAST(&BusinessLogicBase::initial))
+{}
+
 //.${application::BusinessLogicBas~::SM} .....................................
 Q_STATE_DEF(BusinessLogicBase, initial) {
     //.${application::BusinessLogicBas~::SM::initial}

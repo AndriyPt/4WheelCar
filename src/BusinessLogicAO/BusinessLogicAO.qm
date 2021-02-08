@@ -15,6 +15,9 @@
    <operation name="commandHandler" type="void" visibility="0x01" properties="0x04">
     <specifiers>= 0</specifiers>
    </operation>
+   <operation name="BusinessLogicBase" type="" visibility="0x00" properties="0x00">
+    <code>  : QActive(Q_STATE_CAST(&amp;BusinessLogicBase::initial))</code>
+   </operation>
    <statechart properties="0x00">
     <initial target="../1">
      <initial_glyph conn="7,3,5,0,13,6">
