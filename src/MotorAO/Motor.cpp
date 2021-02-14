@@ -9,17 +9,20 @@
 
 namespace motor {
 
-Motor::Motor(TB6612FNG *drive, RPMEncoderOptical *enc1, RPMEncoderOptical *enc2) :
-	drive(drive), enc1(enc1), enc2(enc2)
+Motor::Motor(TB6612FNG *drive, WheelMotorEncoder *enc1, WheelMotorEncoder *enc2, MotorInterface *interface) :
+	drive(drive),
+	interface(interface)
 {
-	// TODO Auto-generated constructor stub
-	this->start(4U, // priority
-				 queueSto, Q_DIM(queueSto),
-#ifndef WIN32
-				 stack, sizeof(stack)); // no stack
-#else
-	 	 	 	 nullptr, 0); // no stack
-#endif
+    wheel[kL].enc = enc1;
+    wheel[kR].enc = enc2;
+
+    wheel[kR].pid = new MiniPID(5, 2, 2);
+    wheel[kR].pid->setOutputLimits(-50, 50);
+
+    wheel[kL].pid = new MiniPID(5, 4, 0.1);
+    wheel[kL].pid->setOutputLimits(-50, 50);
+
+ //   wheel[kL].target_wheel_speed = 5.0;
 }
 
 Motor::~Motor() {
@@ -28,50 +31,63 @@ Motor::~Motor() {
 
 bool Motor::set_speed_left(const QP::QEvt *e) {
     auto ev = (Event*)e;
-    float speed = ev->u[0].f;
-    float pwm = (100.0/300.0)*fabs(speed);
-    TB6612FNG::Mode mode = TB6612FNG::Mode::kCW;
-    if (speed > 0) {
-        mode = TB6612FNG::Mode::kCCW;
-    }
-    drive->drive(TB6612FNG::Channels::kA, mode, pwm);
+
+    wheel[kL].target_wheel_speed = ev->u[0].f;
+
     return true;
 };
 
 bool Motor::set_speed_right(const QP::QEvt *e) {
     auto ev = (Event*)e;
-    float speed = ev->u[0].f;
-    float pwm = (100.0/300.0)*fabs(speed);
-    TB6612FNG::Mode mode = TB6612FNG::Mode::kCW;
-    if (speed > 0) {
-        mode = TB6612FNG::Mode::kCCW;
-    }
-    drive->drive(TB6612FNG::Channels::kB, mode, pwm);
+
+    wheel[kR].target_wheel_speed = ev->u[0].f;
+
     return true;
 };
 
 bool Motor::pid_init(const QP::QEvt *e) {
     auto ev = (Event*)e;
 
-
-    pidController.setOutputMin(0);      // This is the default
-    pidController.setOutputMax(1023);   // The Arduino has a 10-bit'analog' PWM output,
-                                        // but the maximum output can be adjusted down.
-
-    pidController.init(1002);  // Initialize the pid controller to make sure there
-                                        // are no output spikes
+    wheel[kL].init_pid();
+    wheel[kR].init_pid();
 
     return true;
 };
 
 bool Motor::pid_timeout(const QP::QEvt *e) {
     auto ev = (Event*)e;
+    auto L_direction = TB6612FNG::Mode::kCCW;
+    auto R_direction = TB6612FNG::Mode::kCCW;
 
-    unsigned short outputValue = pidController.compute(30);   // Compute the PID output
+    wheel[kL].pid_update();
+    wheel[kR].pid_update();
+
+    if (wheel[kL].target_wheel_speed > 0)
+        L_direction = TB6612FNG::Mode::kCW;
+    if (wheel[kR].target_wheel_speed > 0)
+        R_direction = TB6612FNG::Mode::kCW;
+
+    drive->drive(TB6612FNG::Channels::kB, L_direction, wheel[kL].pwm_based_on_targed + wheel[kL].pwm);
+    drive->drive(TB6612FNG::Channels::kA, R_direction, wheel[kR].pwm_based_on_targed + wheel[kR].pwm);
+
+    //printf("%f %f %f %f\n", std::abs(wheel[kL].target_wheel_speed), std::abs(wheel[kL].current_wheel_speed),  wheel[kL].pwm_based_on_targed, wheel[kL].pwm);
 
     return true;
 };
 
+bool Motor::get_wheel_speed(const QP::QEvt *e) {
+    auto ev = (Event*)e;
+
+    /// perios 100 ms
+
+    wheel[kL].enc_update_speed();
+    wheel[kR].enc_update_speed();
+
+    double positions[2] = {wheel[kL].enc->get_position(), wheel[kR].enc->get_position()};
+    interface->wheel_position_cb(positions, 2);
+
+    return true;
+};
 
 
 }

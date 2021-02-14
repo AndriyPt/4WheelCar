@@ -1,30 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="tim"/>
+		<item key="selection" value="sonic_timeEvt"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
-		<item key="wholeword" value="true"/>
+		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
-			<item value="tim"/>
-			<item value="_axb"/>
-			<item value="__io_putchar"/>
+			<item value="sonic_timeEvt"/>
+			<item value="time"/>
+			<item value="BusinessLogic"/>
+			<item value="USBD_CDC_ReceivePacke"/>
+			<item value="timer"/>
+			<item value="Freq"/>
+			<item value="kDataReady"/>
 			<item value="IMU"/>
-			<item value="m_timeEvt"/>
-			<item value="osSignalSet"/>
-			<item value="HAL_StatusTypeDef"/>
-			<item value="sampleFreqDef"/>
-			<item value="pxCallbackFunction"/>
-			<item value="osMailCreate"/>
-			<item value="asser"/>
-			<item value="asse"/>
-			<item value="xTaskCreate"/>
-			<item value="mpu9250."/>
-			<item value="PSC"/>
+			<item value="IRQ"/>
+			<item value="SampleTime"/>
+			<item value="timeChange"/>
+			<item value="lastTime"/>
+			<item value="setpoint"/>
+			<item value="Dela"/>
+			<item value="HAL_TIM_RegisterCallback"/>
 		</list>
 		<list key="replacehistory">
+			<item value="Sensors"/>
+			<item value="Rosserial"/>
 			<item value="Communication"/>
 			<item value="mpu9250-&gt;"/>
 			<item value="mpu9250"/>
